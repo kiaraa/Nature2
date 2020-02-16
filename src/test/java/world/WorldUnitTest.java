@@ -1,6 +1,5 @@
 package world;
 
-import org.assertj.core.api.Assertions;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
@@ -12,7 +11,7 @@ public class WorldUnitTest {
 
     @Test
     public void testBothSpacesInitializeToEmpty() {
-        World world = new World(5,5);
+        World world = new World(5,5, 0);
         for (WorldUnit unit : world.unitList) {
             assertThat(unit.getCreatureSpace()).isNull();
             assertThat(unit.getPlantSpace()).isNull();

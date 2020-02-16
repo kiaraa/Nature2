@@ -8,8 +8,8 @@ import java.awt.*;
 public class WelcomeWindow {
     JFrame frame;
     JPanel fieldsPanel, buttonPanel;
-    JLabel rowsLabel, colsLabel;
-    JTextField rowsField, colsField;
+    JLabel rowsLabel, colsLabel, cowsLabel;
+    JTextField rowsField, colsField, cowsField;
     JButton startButton;
 
     public WelcomeWindow(){
@@ -18,14 +18,16 @@ public class WelcomeWindow {
         buttonPanel = new JPanel();
         rowsLabel = new JLabel("Number of rows: ");
         colsLabel = new JLabel("Number of columns: ");
+        cowsLabel = new JLabel("Number of cows: ");
         rowsField = new JTextField("");
         colsField = new JTextField("");
+        cowsField = new JTextField("");
         startButton = new JButton("Start!");
 
         //add functionality to fields and buttons
 
         startButton.addActionListener(e -> SwingUtilities.invokeLater(() -> {
-            World world = new World(getStartRows(), getStartCols());
+            World world = new World(getStartRows(), getStartCols(), getStartCows());
             frame.setVisible(false);
             frame.dispose();
         }));
@@ -37,6 +39,8 @@ public class WelcomeWindow {
         fieldsPanel.add(rowsField);
         fieldsPanel.add(colsLabel);
         fieldsPanel.add(colsField);
+        fieldsPanel.add(cowsLabel);
+        fieldsPanel.add(cowsField);
         buttonPanel.add(startButton);
 
         frame.add(fieldsPanel, BorderLayout.PAGE_START);
@@ -52,5 +56,9 @@ public class WelcomeWindow {
 
     public int getStartCols() {
         return Integer.parseInt(colsField.getText());
+    }
+
+    public int getStartCows() {
+        return Integer.parseInt(cowsField.getText());
     }
 }
