@@ -16,6 +16,7 @@ public class World extends JFrame {
     public WorldUnit[][] grid;
     private int width;
     private int height;
+    private ArrayList<Creature> hasMovedList;
 
     public List<WorldUnit> getUnitList() {
         return unitList;
@@ -25,13 +26,17 @@ public class World extends JFrame {
         return grid;
     }
 
+    private java.util.Timer worldTimer;
+
     public World(int width, int height, int initialCows) {
         this.width = width;
         this.height = height;
+        Ticker ticker = new Ticker(this);
+        java.util.Timer worldTimer = new java.util.Timer();
         this.grid = new WorldUnit[width][height];
             for(int i = 0; i < width; i++) {
                 for (int j = 0; j < height; j++) {
-                    WorldUnit unit = new WorldUnit();
+                    WorldUnit unit = new WorldUnit(unitList.size(),new int [] {i,j});
                     this.grid[i][j] = unit;
                     unitList.add(unit);
                 }
@@ -42,6 +47,8 @@ public class World extends JFrame {
             initialCows --;
         }
 
+        this.hasMovedList = new ArrayList<Creature>();
+        worldTimer.schedule(ticker, 0, 2000);
         this.getContentPane().setBackground(new Color(50,50,50));
         setSize(width * UNIT_SIZE,(height * UNIT_SIZE) + 23);
         setVisible(true);
@@ -50,9 +57,9 @@ public class World extends JFrame {
     }
 
     private void initializeCow() {
-        WorldUnit unitToPlaceCow = unitList.get(randy.nextInt(unitList.size() - 1));
+        WorldUnit unitToPlaceCow = unitList.get(randy.nextInt(unitList.size()));
         if (unitToPlaceCow.getCreatureSpace() == null) {
-            unitToPlaceCow.setCreatureSpace(new Creature());
+            unitToPlaceCow.setCreatureSpace(new Creature(this, unitToPlaceCow, 1));
         } else {
             initializeCow();
         }
@@ -70,5 +77,22 @@ public class World extends JFrame {
                 g.setColor(new Color(0,0,0));
             }
         }
+    }
+
+    public void tick() {
+        for (int i = 0; i < this.width; i++) {
+            for (int j = 0; j < this.height; j++) {
+                if (this.grid[i][j].getCreatureSpace() instanceof Creature && !hasMovedList.contains(this.grid[i][j].getCreatureSpace())) {
+                    hasMovedList.add(this.grid[i][j].getCreatureSpace());
+                    this.grid[i][j].getCreatureSpace().move();
+                }
+                else if (this.grid[i][j].getCreatureSpace() != null){
+                    System.out.println("A creature tried to move, but already had.");
+                }
+            }
+        }
+        hasMovedList.clear();
+        System.out.println("tick");
+        this.repaint();
     }
 }
